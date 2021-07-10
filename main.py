@@ -58,6 +58,6 @@ if __name__ == "__main__":
             client.publish(
                 f"{TOPIC}/state",
                 payload=new_payload,
-                qos=0, retain=False)
+                qos=0, retain=True)
             payload = new_payload
         time.sleep(1)
