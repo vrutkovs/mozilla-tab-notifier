@@ -1,0 +1,17 @@
+[Unit]
+Description=Home Assistant Meeting
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 main.py
+WorkingDirectory=/var/home/vrutkovs/src/gitea.vrutkovs.eu/mozilla-tab-notifier
+Environment=MQTT_SENSOR_NAME="garden"
+Environment=MQTT_HOST="gumball.vrutkovs.eu"
+Environment=MQTT_USER="vadim"
+Environment=MQTT_PASSWORD="psJgSJTvYV7bVjR3"
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
