@@ -15,8 +15,7 @@ MEETING_URLS=[
 ]
 
 # Register a binary sensor at Home Assistant
-DEVICE='meeting_active'
-TOPIC=f'finn/{DEVICE}'
+TOPIC=f'finn/meeting_active'
 BOOL2MQTT={True: "ON", False: "OFF"}
 
 def on_log(client, userdata, level, buff):
@@ -50,18 +49,6 @@ if __name__ == "__main__":
     client.on_log = on_log
     client.username_pw_set(username=os.getenv("MQTT_USER"),password=os.getenv("MQTT_PASSWORD"))
     client.connect(os.getenv("MQTT_HOST"), 1883, 60)
-
-    logging.debug("Registering at Home Assistant")
-    config_payload = {
-        "~": TOPIC,
-        "name": "Active meeting",
-        "unique_id": DEVICE,
-        "state_topic": "~/state",
-    }
-    client.publish(
-        f"homeassistant/binary_sensor/{DEVICE}/config",
-        payload=json.dumps(config_payload),
-        qos=0, retain=False)
 
     payload = None
     while True:
