@@ -23,7 +23,7 @@ def on_log(client, userdata, level, buff):
     logging.log(level, f"{userdata}-{buff}")
 
 # Prepare session backup file path
-PROFILE_DIR='/var/home/vrutkovs/.var/app/org.mozilla.firefox/.mozilla/firefox/4dwb0vhd.default-beta'
+PROFILE_DIR=os.environ['FF_PROFILE']
 sessionBackupPath='sessionstore-backups/recovery.jsonlz4'
 filePath=os.path.join(PROFILE_DIR, sessionBackupPath)
 

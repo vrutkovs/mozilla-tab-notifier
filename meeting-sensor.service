@@ -1,17 +1,20 @@
 [Unit]
-Description=Home Assistant Meeting
-After=multi-user.target
+Description=Home Assistant Meeting sensor
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=/run/user/1000/containers
 
 [Service]
-Type=idle
-ExecStart=/usr/bin/python3 main.py
-WorkingDirectory=/var/home/vrutkovs/src/gitea.vrutkovs.eu/mozilla-tab-notifier
-Environment=MQTT_SENSOR_NAME="garden"
-Environment=MQTT_HOST="gumball.vrutkovs.eu"
-Environment=MQTT_USER="vadim"
-Environment=MQTT_PASSWORD="psJgSJTvYV7bVjR3"
-Environment=PYTHONUNBUFFERED=1
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Environment=FF_PROFILE=/var/home/vrutkovs/.var/app/org.mozilla.firefox/.mozilla/firefox/5wh9md41.default-beta/
 Restart=always
+TimeoutStopSec=61
+ExecStartPre=-/usr/bin/podman rm -f %n
+ExecStartPre=/usr/bin/podman create -e MQTT_SENSOR_NAME="garden" -e MQTT_HOST="gumball.vrutkovs.eu" -e MQTT_USER="vadim" -e MQTT_PASSWORD="psJgSJTvYV7bVjR3" -e MQTT_PASSWORD="psJgSJTvYV7bVjR3" -e  PYTHONUNBUFFERED=1 --name=%n -e FF_PROFILE=${FF_PROFILE} -v ${FF_PROFILE}:${FF_PROFILE}:z registry.vrutkovs.eu/mozilla-tab-notifier:latest
+ExecStart=/usr/bin/podman start %n
+ExecStop=/usr/bin/podman stop -t 1 %n
+ExecStopPost=/usr/bin/podman stop -t 1 %n
+Type=forking
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target default.target
